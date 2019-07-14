@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.cai.microservice.dao.UserDao">
+
+	<select id="getUserInfoByName" resultType="cn.cai.microservice.entiy.User">
+		select * from userInfo where userName=#{userName}
+	</select>
+	
+	<update id="updateUserInfo">
+		update userInfo set
+			password=#{password},
+			email=#{email}
+		where userName=#{userName} 
+	</update>
+
+	<delete id="deleteUserInfo">
+		delete from userInfo where userName=#{userName}
+	</delete>
+	
+	<insert id="insertUserInfo">
+		insert into 
+			userInfo(userName, password, email) values(#{userName}, #{password}, #{email})
+	</insert>
+</mapper>
