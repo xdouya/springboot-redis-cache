@@ -23,6 +23,9 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
+/**
+ * @author zhang
+ */
 @Configuration
 @EnableCaching
 public class CacheConfig{
@@ -48,27 +51,23 @@ public class CacheConfig{
 //			  3、序列化后的结果非常庞大，是JSON格式的5倍左右，这样就会消耗redis服务器的大量内存。		
 //		ClassLoader loader = this.getClass().getClassLoader();
 //		JdkSerializationRedisSerializer jdkSerializationRedisSerializer = new JdkSerializationRedisSerializer(loader);
-		
 //		Jackson2JsonRedisSerializer序列化器：把一个对象以Json的形式存储，效率高且对调用者友好
 //		优点：速度快，序列化后的字符串短小精悍，不需要存储对象实现java.io.Serializable接口
 //		缺点：那就是此类的构造函数中有一个类型参数，必须提供要序列化对象的类型信息(.class对象)，反序列化用到了该类型信息
 //		Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
 //		ObjectMapper objectMapper = new ObjectMapper();
-//		objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-		
+//		objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY)
 //		GenericJackson2JsonRedisSerializer序列化器：基本和上面的Jackson2JsonRedisSerializer功能差不多，使用方式也差不多，
 //		但不需要提供类型信息，推荐使用
 		GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
 		RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-				.entryTtl(Duration.ofMinutes(10))	//设置失效时间
+				.entryTtl(Duration.ofMinutes(10))
 				.serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))
 				.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(genericJackson2JsonRedisSerializer));
-		
-		RedisCacheManager redisCacheManager = RedisCacheManager.builder(redisConnectionFactory)
+
+		return RedisCacheManager.builder(redisConnectionFactory)
 				.cacheDefaults(config)
 				.build();
-		
-		return redisCacheManager;
 	}
 	
 	@Bean
